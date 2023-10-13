@@ -46,7 +46,7 @@ export const links = () => {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    { rel: 'icon', href: '//www.croiala.com/cdn/shop/files/123_10x_3a8f1e46-616d-48a7-9a12-9015c52cfd45_32x32.png?v=1689668956' },
+    { rel: 'icon', href: '//homeromo.com/cdn/shop/files/43434.png?crop=center&height=32&v=1695890973&width=32' },
   ];
 };
 
