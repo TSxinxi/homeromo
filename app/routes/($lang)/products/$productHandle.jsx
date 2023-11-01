@@ -252,6 +252,8 @@ function GetCommentHeader() {
           return urlDivHead.innerHTML
         }
       }
+    }).catch(function (error) {
+    }).finally(() => {
     }))
 }
 // 筛选下拉框
@@ -566,8 +568,8 @@ export default function Product() {
               <span>{currencyCode || LText.type}</span>
             </div>
 
-            <img className='logo' src={`https://platform.antdiy.vip/static/image/homeromo_logo.svg`} />
-            <p onClick={() => { window.open('https://' + getShopAddress()) }}><img src="https://platform.antdiy.vip/static/image/hultoo_home.svg" /></p>
+            <img className='logo' src={`https://platform.antdiy.vip/static/image/homeromo_logo2.svg`} />
+            <p onClick={() => { window.open('https://' + getShopAddress()) }}><img src="https://platform.antdiy.vip/static/image/zoopetcc_home.svg" /></p>
             {/* <p></p> */}
           </div>
         </div>
@@ -796,37 +798,59 @@ export default function Product() {
           //     )}
           //   </button>
           // </div>
-          <div className='buy_button sticky_bottom' style={{ padding: getDirection() === 'rtl' ? '.5rem .5rem .5rem .8rem' : '.5rem .8rem .5rem .5rem' }}>
-            <button className='buy_btn_new'>
-              {/* <img src="https://platform.antdiy.vip/static/image/hultoo_buybtn.png" /> */}
-              {/* {isOutOfStock ? (
-                <Text className='py-3 px-6'>{LText.sold}</Text>//卖完了
-              ) : ( */}
-              <div className='bg_color'>
-                <Text //立即购买
-                  as="span"
-                  className="flex items-center justify-center gap-2 py-3 px-6"
-                  onClick={() => { goSettleAccounts() }}
-                >
-                  <span>{LText.buy}</span>
-                </Text>
-                <span className="light_bg"></span>
-                <span className="right_bg"></span>
-              </div>
-              <img src="https://platform.antdiy.vip/static/image/hultoo_light.png" />
-              {/* )} */}
-            </button>
-            <div className='buy_btn_price'>
+          <div className='settle_accounts_foot'>
+            <div>
+              {/* <div className='buy_btn_price'>
+              <span className='btn_price btn_price_new'>
+                <i>{currency} </i>{parseFloat(selectedVariant?.price?.amount)}
+              </span>
               {isOnSale && (
                 <span className='btn_price btn_price_old'>
                   <i>{currency} </i>{parseFloat(selectedVariant?.compareAtPrice?.amount)}
                 </span>
               )}
-              <span className='btn_price btn_price_new'>
-                <i>{currency} </i>{parseFloat(selectedVariant?.price?.amount)}
-              </span>
+            </div> */}
+              <div className='submit_btn'>
+                <button className='inline-block rounded font-medium text-center w-full bg-primary text-contrast paddingT5'>
+                  <Text //立即购买
+                    as="span"
+                    className="flex items-center justify-center gap-2 py-3 px-6 buy_text"
+                    style={{ maxWidth: 'initial' }}
+                    onClick={() => { goSettleAccounts() }}
+                  >
+                    <span>{LText.buy}</span>
+                  </Text>
+                </button>
+              </div>
             </div>
           </div>
+          // <div className='buy_button sticky_bottom' style={{ padding: getDirection() === 'rtl' ? '.5rem .5rem .5rem .8rem' : '.5rem .8rem .5rem .5rem' }}>
+          //   <button className='buy_btn_new'>
+          //     <div className='bg_color'>
+          //       <Text //立即购买
+          //         as="span"
+          //         className="flex items-center justify-center gap-2 py-3 px-6"
+          //         onClick={() => { goSettleAccounts() }}
+          //       >
+          //         <span>{LText.buy}</span>
+          //       </Text>
+          //       <span className="light_bg"></span>
+          //       <span className="right_bg"></span>
+          //     </div>
+          //     <img src="https://platform.antdiy.vip/static/image/hultoo_light.png" />
+          //     {/* )} */}
+          //   </button>
+          //   <div className='buy_btn_price'>
+          //     {isOnSale && (
+          //       <span className='btn_price btn_price_old'>
+          //         <i>{currency} </i>{parseFloat(selectedVariant?.compareAtPrice?.amount)}
+          //       </span>
+          //     )}
+          //     <span className='btn_price btn_price_new'>
+          //       <i>{currency} </i>{parseFloat(selectedVariant?.price?.amount)}
+          //     </span>
+          //   </div>
+          // </div>
         )}
         <div className='back'><span></span></div>
       </Section>
@@ -892,7 +916,7 @@ function goSettleAccounts() {
 
 // FBQ
 function sendFbq(a, b, c) {
-  if ("function" == typeof window.fbq){
+  if ("function" == typeof window.fbq) {
     window.fbq("track", a, b, c)
   }
 }
