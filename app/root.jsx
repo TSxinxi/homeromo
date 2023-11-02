@@ -131,8 +131,24 @@ export default function App() {
       fbq('init', '292861753259331');
       fbq('track', 'PageView');
 
-      const BrowserLogger = require('alife-logger');
-      const __bl = BrowserLogger.singleton({ pid: "gr6w69wpuh@7e4f7adc8879653", appType: "web", imgUrl: "https://arms-retcode.aliyuncs.com/r.png?", sendResource: true, enableLinkTrace: true, behavior: true, enableSPA: true, useFmp: true, enableConsole: true });
+      !(function (c, b, d, a) {
+        c[a] || (c[a] = {}); c[a].config =
+        {
+          pid: "gr6w69wpuh@db34193c9e236f8",
+          appType: "web",
+          imgUrl: "https://arms-retcode.aliyuncs.com/r.png?",
+          sendResource: true,
+          enableLinkTrace: true,
+          behavior: true,
+          enableSPA: true,
+          useFmp: true,
+          enableConsole: true
+        };
+        let newScript = document.createElement("script")
+        newScript.src = d
+        newScript.setAttribute("crossorigin", "")
+        document.body.insertBefore(newScript, document.body.firstChild);
+      })(window, document, "https://sdk.rum.aliyuncs.com/v1/bl.js", "__bl");
     }, []);
   }
   return (
