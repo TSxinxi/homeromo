@@ -130,6 +130,9 @@ export default function App() {
         'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '292861753259331');
       fbq('track', 'PageView');
+
+      const BrowserLogger = require('alife-logger');
+      const __bl = BrowserLogger.singleton({ pid: "gr6w69wpuh@7e4f7adc8879653", appType: "web", imgUrl: "https://arms-retcode.aliyuncs.com/r.png?", sendResource: true, enableLinkTrace: true, behavior: true, enableSPA: true, useFmp: true, enableConsole: true });
     }, []);
   }
   return (
