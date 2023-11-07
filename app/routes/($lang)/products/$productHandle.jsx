@@ -3,7 +3,7 @@ import { useRef, useMemo, useEffect, useState } from 'react';
 import { Listbox } from '@headlessui/react';
 import { defer } from '@shopify/remix-oxygen';
 import fetch from '../../../fetch/axios';
-import { getShopAddress, openComment, getLanguage, getDirection, getDomain } from '~/lib/P_Variable';
+import { getShopAddress, getLanguage, getDirection, getDomain } from '~/lib/P_Variable';
 import $ from 'jquery'
 import {
   useLoaderData,
@@ -115,20 +115,20 @@ function GetJudge(product_id, page, sortBy, rating) {
     per_page: 5,
     product_id: product_id,
     page: page,
-    filter_rating: rating ? rating : null
+    // filter_rating: rating ? rating : null
   }
-  if (sortBy === 'created_at') {
-    params.sort_by = 'created_at'
-    params.sort_dir = 'desc'
-  } else if (sortBy === 'desc') {
-    params.sort_by = 'rating'
-    params.sort_dir = 'desc'
-  } else if (sortBy === 'asc') {
-    params.sort_by = 'rating'
-    params.sort_dir = 'asc'
-  } else {
-    params.sort_by = sortBy
-  }
+  // if (sortBy === 'created_at') {
+  //   params.sort_by = 'created_at'
+  //   params.sort_dir = 'desc'
+  // } else if (sortBy === 'desc') {
+  //   params.sort_by = 'rating'
+  //   params.sort_dir = 'desc'
+  // } else if (sortBy === 'asc') {
+  //   params.sort_by = 'rating'
+  //   params.sort_dir = 'asc'
+  // } else {
+  //   params.sort_by = sortBy
+  // }
   return (fetch.get(`https://judge.me/reviews/reviews_for_widget`, { params })
     .then(res => {
       if (res && res.data && res.data.html) {
@@ -478,6 +478,7 @@ export default function Product() {
   const [filtRat, setFiltRat] = useState('');
   const [currency, setCurrency] = useState('');
   const [commentSum, setCommentSum] = useState('');
+  const [openJudgeme, setOpenJudgeme] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -516,25 +517,34 @@ export default function Product() {
         window.localStorage.setItem('sourceName', param)
         window.localStorage.setItem('sourceProductId', product.id)
       }
-      if (product_id && openComment()) {
-        // 评论
-        GetJudge(product_id, 1, sortBy).then(res => {
-          if (res) {
-            setComment(res)
-          }
-        })
-        // 评论头部
-        GetCommentHeader().then(res => {
-          if (res) {
-            setCommentHeader(res)
-            var setDiv = document.createElement("div");
-            setDiv.innerHTML = res;
-            let averageText = setDiv.getElementsByClassName('jdgm-rev-widg__summary-text')[0]
-            if (averageText && averageText.innerHTML != LText.commentResult) {
-              let summaryNum = averageText.innerHTML.match(/\d+(\.\d+)?/g)[0]
-              if (summaryNum) {
-                setCommentSum(summaryNum)
-              }
+      if (product_id) {
+        // 是否打开评论
+        fetch.get(`${getDomain()}/account-service/site_plug/pass/get_plug_state?store=${getShopAddress()}&site_code=${currencyCode || 'ron'}`).then(res => {
+          if (res.data && res.data.data && res.data.data.length > 0) {
+            let judgemeData = res.data.data.filter(i => i.plug_name == 'judgeme')[0]
+            if (judgemeData && judgemeData.plug_state == 1) {
+              setOpenJudgeme(true)
+              // 评论
+              GetJudge(product_id, 1, sortBy).then(res => {
+                if (res) {
+                  setComment(res)
+                }
+              })
+              // 评论头部
+              GetCommentHeader().then(res => {
+                if (res) {
+                  setCommentHeader(res)
+                  var setDiv = document.createElement("div");
+                  setDiv.innerHTML = res;
+                  let averageText = setDiv.getElementsByClassName('jdgm-rev-widg__summary-text')[0]
+                  if (averageText && averageText.innerHTML != LText.commentResult) {
+                    let summaryNum = averageText.innerHTML.match(/\d+(\.\d+)?/g)[0]
+                    if (summaryNum) {
+                      setCommentSum(summaryNum)
+                    }
+                  }
+                }
+              })
             }
           }
         })
@@ -588,7 +598,7 @@ export default function Product() {
                   {title}
                 </Heading>
                 {
-                  commentSum && openComment() ? <div className='opinion_sum' onClick={() => { goComment() }}>
+                  commentSum && openJudgeme ? <div className='opinion_sum' onClick={() => { goComment() }}>
                     <img src="https://platform.antdiy.vip/static/image/hydrogen_icon_star_quan.svg" />
                     <img src="https://platform.antdiy.vip/static/image/hydrogen_icon_star_quan.svg" />
                     <img src="https://platform.antdiy.vip/static/image/hydrogen_icon_star_quan.svg" />
@@ -636,22 +646,21 @@ export default function Product() {
           </div>
         </div>
         {
-          openComment() ? <div className='comment_product borderf5'>
+          openJudgeme ? <div className='comment_product borderf5'>
             <div className='comment_box'>
               <div className='comment_box_title'>{LText.comTit}</div>
               {commentHeader ? <div
                 className="dark:prose-invert comment_box_content"
                 dangerouslySetInnerHTML={{ __html: commentHeader }}
                 onClick={(e) => { clickComment(e, setFiltRat, product_id, sortBy, setComment) }}
-              /> : null
-                // <div className="jdgm-rev-widg__header comment_box_content">
-                //   <div className="jdgm-rev-widg__summary">
-                //     <div className="jdgm-rev-widg__summary-text">{LText.noOpinion}</div>
-                //   </div>
-                //   <div className="jdgm-rev-widg__sort-wrapper">
-                //     <button className="add_comment" onClick={(e) => { clickComment(e, setFiltRat, product_id, sortBy, setComment) }}>{LText.writeReview}</button>
-                //   </div>
-                // </div>
+              /> : <div className="jdgm-rev-widg__header comment_box_content">
+                {/* <div className="jdgm-rev-widg__summary">
+                  <div className="jdgm-rev-widg__summary-text">{LText.noOpinion}</div>
+                </div> */}
+                <div className="jdgm-rev-widg__sort-wrapper" onClick={(e) => { clickComment(e, setFiltRat, product_id, sortBy, setComment) }}>
+                  <button className="add_comment">{LText.writeReview}</button>
+                </div>
+              </div>
               }
               <div className='jq_slow'>
                 <div className='write_review'>
